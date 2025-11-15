@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Sistema de Vehículos{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <h2>Bienvenido al Sistema de Gestión de Vehículos</h2>
+    <p>Gestiona tu flota de vehículos de manera eficiente</p>
+    
+    <div class="quick-actions">
+    <div class="action-buttons">
+        <a href="{% url 'lista_vehiculos' %}" class="btn-primary">
+            <span style="font-size: 24px;"></span><br>
+            Ver Todos los Vehículos
+        </a>
+        <a href="{% url 'crear_vehiculo' %}" class="btn-primary">
+            <span style="font-size: 24px;"></span><br>
+            Crear Nuevo Vehículo
+        </a>
+    </div>
+</div>
+{% endblock %}
