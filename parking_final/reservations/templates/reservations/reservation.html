@@ -1,0 +1,65 @@
+{% extends 'reservations/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Reservar Parqueadero - {{ parking_lot.name }}</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>Información del Parqueadero:</strong><br>
+                    Dirección: {{ parking_lot.address }}<br>
+                    Tarifa: ${{ parking_lot.hourly_rate }} por hora<br>
+                    Espacios disponibles: {{ parking_lot.available_spaces }}/{{ parking_lot.total_spaces }}
+                </div>
+                
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    <strong>Errores en el formulario:</strong>
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <!-- Campo oculto para parking_lot -->
+                    <input type="hidden" name="parking_lot" value="{{ parking_lot.id }}">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Placa del Vehículo</label>
+                        <input type="text" class="form-control" name="license_plate" maxlength="10" 
+                               value="{{ form.license_plate.value|default:'' }}" required
+                               placeholder="Ej: ABC123">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Fecha y Hora de Inicio</label>
+                        <input type="datetime-local" class="form-control" name="start_time" 
+                               value="{{ form.start_time.value|default:'' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Fecha y Hora de Fin</label>
+                        <input type="datetime-local" class="form-control" name="end_time" 
+                               value="{{ form.end_time.value|default:'' }}" required>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-primary">Continuar al Pago</button>
+                        <a href="{% url 'parking_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

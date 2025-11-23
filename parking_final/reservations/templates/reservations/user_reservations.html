@@ -1,0 +1,68 @@
+{% extends 'reservations/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Mis Reservas</h2>
+        
+        {% if reservations %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Parqueadero</th>
+                        <th>Placa</th>
+                        <th>Fecha/Hora</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reservation in reservations %}
+                    <tr>
+                        <td>{{ reservation.id }}</td>
+                        <td>{{ reservation.parking_lot.name }}</td>
+                        <td>{{ reservation.license_plate }}</td>
+                        <td>
+                            {{ reservation.start_time|date:"d/m/Y H:i" }}<br>
+                            <small>a {{ reservation.end_time|date:"H:i" }}</small>
+                        </td>
+                        <td>
+                            <span class="badge 
+                                {% if reservation.status == 'confirmed' %}bg-success
+                                {% elif reservation.status == 'pending' %}bg-warning
+                                {% elif reservation.status == 'active' %}bg-primary
+                                {% elif reservation.status == 'completed' %}bg-secondary
+                                {% else %}bg-danger{% endif %}">
+                                {{ reservation.get_status_display }}
+                            </span>
+                        </td>
+                        <td>${{ reservation.total_amount }}</td>
+                        <td>
+                            {% if reservation.status == 'confirmed' %}
+                                <a href="{% url 'qr_code' reservation.id %}" class="btn btn-sm btn-info">Ver QR</a>
+                                <a href="{% url 'cancel_reservation' reservation.id %}" class="btn btn-sm btn-danger" 
+                                   onclick="return confirm('¿Estás seguro de cancelar esta reserva?')">Cancelar</a>
+                            {% elif reservation.status == 'pending' %}
+                                <a href="{% url 'payment' reservation.id %}" class="btn btn-sm btn-primary">Pagar</a>
+                                <a href="{% url 'cancel_reservation' reservation.id %}" class="btn btn-sm btn-danger">Cancelar</a>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No tienes reservas realizadas.
+            <a href="{% url 'parking_list' %}" class="alert-link">Haz tu primera reserva</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

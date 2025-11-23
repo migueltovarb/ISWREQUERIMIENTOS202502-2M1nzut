@@ -1,0 +1,47 @@
+{% extends 'reservations/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Reserva Confirmada</h4>
+            </div>
+            <div class="card-body text-center">
+                <div class="alert alert-success">
+                    <h5>¡Reserva Confirmada!</h5>
+                    <p class="mb-0">Tu reserva ha sido procesada exitosamente.</p>
+                </div>
+                
+                <h5>Código QR de Acceso</h5>
+                
+                {% if qr_code_url %}
+                <div class="mb-3">
+                    <img src="{{ qr_code_url }}" alt="QR Code" class="img-fluid border rounded" style="max-width: 300px;">
+                </div>
+                <small class="text-muted">
+                    Escanea este código QR en la entrada del parqueadero
+                </small>
+                {% endif %}
+                
+                <hr>
+                
+                <div class="text-start">
+                    <h6>Detalles de la Reserva:</h6>
+                    <p><strong>Parqueadero:</strong> {{ reservation.parking_lot.name }}</p>
+                    <p><strong>Dirección:</strong> {{ reservation.parking_lot.address }}</p>
+                    <p><strong>Placa:</strong> {{ reservation.license_plate }}</p>
+                    <p><strong>Inicio:</strong> {{ reservation.start_time|date:"d/m/Y H:i" }}</p>
+                    <p><strong>Fin:</strong> {{ reservation.end_time|date:"d/m/Y H:i" }}</p>
+                    <p><strong>Total:</strong> ${{ reservation.total_amount }}</p>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="{% url 'user_reservations' %}" class="btn btn-primary">Ver Mis Reservas</a>
+                    <a href="{% url 'parking_list' %}" class="btn btn-outline-secondary">Nueva Reserva</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

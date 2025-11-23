@@ -1,0 +1,41 @@
+{% extends 'reservations/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Parqueaderos Disponibles</h2>
+        
+        <div class="row">
+            {% for parking_lot in parking_lots %}
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ parking_lot.name }}</h5>
+                        <p class="card-text">
+                            <strong>Dirección:</strong> {{ parking_lot.address }}<br>
+                            <strong>Tarifa:</strong> ${{ parking_lot.hourly_rate }}/hora<br>
+                            <strong>Espacios:</strong> 
+                            <span class="badge {% if parking_lot.available_spaces > 0 %}bg-success{% else %}bg-danger{% endif %}">
+                                {{ parking_lot.available_spaces }}/{{ parking_lot.total_spaces }}
+                            </span>
+                        </p>
+                        
+                        {% if parking_lot.available_spaces > 0 %}
+                            <a href="{% url 'create_reservation' parking_lot.id %}" class="btn btn-primary">
+                                Reservar Ahora
+                            </a>
+                        {% else %}
+                            <button class="btn btn-secondary" disabled>No hay espacios</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">No hay parqueaderos disponibles.</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
